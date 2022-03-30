@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "adc.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -93,12 +94,15 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   MX_TIM1_Init();
-  MX_USART2_UART_Init();
+  MX_ADC1_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 
+  //Ê¹ÄÜ (??????????)
   HAL_TIM_Base_Start_IT(&htim1);
+  HAL_TIM_Base_Start_IT(&htim2);
 
-  HAL_Delay(500);
+  HAL_Delay(1000);
   printf("\n - - hello world ! - -");
 
   /* USER CODE END 2 */
@@ -112,17 +116,17 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-    HAL_UART_Receive(&huart2, buffer, sizeof(buffer) - 1, 100);
+    HAL_UART_Receive(&huart1, buffer, sizeof(buffer) - 1, 100);
     if (buffer[0] != 0)
     {
       printf("HAL_UART_Receive: %s", buffer);
       memset(buffer, 0, sizeof(buffer));
     }
 
-    HAL_Delay(1000);
-    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
-    HAL_Delay(1000);
-    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+    // HAL_Delay(1000);
+    GPIO_PinState pinState = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_14);
+    // HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, pinState == GPIO_PIN_RESET ? GPIO_PIN_SET : GPIO_PIN_RESET);
+    // printf("pin14State %d", pinState);
   }
   /* USER CODE END 3 */
 }
@@ -135,6 +139,7 @@ void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
@@ -161,6 +166,12 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_ADC;
+  PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV6;
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
   }
