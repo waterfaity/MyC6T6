@@ -50,7 +50,6 @@ NVIC.SVCall_IRQn=true\:0\:0\:false\:false\:true\:false\:false\:true
 NVIC.SysTick_IRQn=true\:15\:0\:false\:false\:true\:false\:true\:true
 NVIC.TIM1_UP_IRQn=true\:0\:0\:false\:false\:true\:true\:true\:true
 NVIC.TIM2_IRQn=true\:0\:0\:false\:false\:true\:true\:true\:true
-NVIC.USART1_IRQn=true\:0\:0\:false\:false\:true\:true\:true\:true
 NVIC.UsageFault_IRQn=true\:0\:0\:false\:false\:true\:false\:false\:true
 PA1.Signal=ADCx_IN1
 PA10.Mode=Asynchronous
