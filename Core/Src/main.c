@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
+#include "dma.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -61,6 +62,7 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 
 char buffer[1000];
+uint32_t adcValue[2] = {0};
 
 /* USER CODE END 0 */
 
@@ -94,13 +96,15 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   MX_TIM1_Init();
-  MX_ADC1_Init();
+  MX_DMA_Init();
   MX_TIM2_Init();
+  MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
 
   //Ê¹ÄÜ (??????????)
   HAL_TIM_Base_Start_IT(&htim1);
   HAL_TIM_Base_Start_IT(&htim2);
+  HAL_ADC_Start_DMA(&hadc1, adcValue, 2);
 
   HAL_Delay(1000);
   printf("\n - - hello world ! - -");
